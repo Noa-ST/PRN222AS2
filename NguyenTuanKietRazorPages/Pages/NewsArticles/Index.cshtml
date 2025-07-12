@@ -1,0 +1,59 @@
+﻿@page
+@model NguyenTuanKietRazorPages.Pages.NewsArticles.IndexModel
+@{
+    ViewData["Title"] = "Quản lý bài viết";
+}
+
+<div class="container mt-4">
+    <h2 class="mb-4">Danh sách bài viết</h2>
+    <div class="row mb-3">
+        <div class="col-md-4">
+            <a class="btn btn-success" asp-page="./Create">Thêm mới</a>
+        </div>
+        <div class="col-md-8">
+            <form method="get" class="form-inline">
+                <div class="form-group mr-2">
+                    <input asp-for="SearchTitle" class="form-control" placeholder="Tìm theo tiêu đề" />
+                </div>
+                <div class="form-group mr-2">
+                    <select asp-for="SearchCategoryId" class="form-control" asp-items="Model.Categories">
+                        <option value="">Tất cả danh mục</option>
+                    </select>
+                </div>
+                <div class="form-group mr-2">
+                    <select asp-for="SearchTagId" class="form-control" asp-items="Model.Tags">
+                        <option value="">Tất cả thẻ</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary">Tìm kiếm</button>
+            </form>
+        </div>
+    </div>
+    <div class="row">
+        @foreach (var article in Model.Articles)
+        {
+            <div class="col-md-4 mb-4">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">@article.Title</h5>
+                        <p class="card-text">@article.Content.Substring(0, Math.Min(100, article.Content.Length))...</p>
+                        <div class="btn-group">
+                            <a class="btn btn-warning btn-sm" asp-page="./Edit" asp-route-id="@article.ArticleId">Sửa</a>
+                            <a class="btn btn-danger btn-sm" asp-page="./Delete" asp-route-id="@article.ArticleId">Xóa</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+    <nav aria-label="Page navigation">
+        <ul class="pagination justify-content-center">
+            @for (int i = 1; i <= Model.TotalPages; i++)
+            {
+                <li class="page-item @(i == Model.PageNumber ? "active" : "")">
+                    <a class="page-link" asp-page="./Index" asp-route-pageNumber="@i">@i</a>
+                </li>
+            }
+        </ul>
+    </nav>
+</div>

@@ -1,0 +1,19 @@
+﻿@page
+@model NguyenTuanKietRazorPages.Pages.Tags.CreateModel
+@{
+    ViewData["Title"] = "Thêm thẻ mới";
+}
+
+<h2 class="mb-4">Thêm thẻ mới</h2>
+<form method="post">
+    <div class="form-group">
+        <label asp-for="Tag.TagName" class="form-label">Tên thẻ</label>
+        <input asp-for="Tag.TagName" class="form-control" />
+        <span asp-validation-for="Tag.TagName" class="text-danger"></span>
+    </div>
+    <button type="submit" class="btn btn-success mt-2">Lưu</button>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

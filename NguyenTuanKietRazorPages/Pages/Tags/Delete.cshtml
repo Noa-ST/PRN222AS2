@@ -1,0 +1,26 @@
+﻿@page
+@model NguyenTuanKietRazorPages.Pages.Tags.DeleteModel
+@{
+    ViewData["Title"] = "Xóa thẻ";
+}
+
+<h2>Xác nhận xóa</h2>
+
+@if (!ModelState.IsValid)
+{
+    <div class="alert alert-danger">
+        @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+        {
+            <p>@error.ErrorMessage</p>
+        }
+    </div>
+}
+
+<div>
+    <p>Bạn có chắc chắn muốn xóa thẻ <strong>@Model.Tag.TagName</strong>?</p>
+    <form method="post">
+        <input type="hidden" asp-for="Tag.TagId" />
+        <button type="submit" class="btn btn-danger">Xóa</button>
+        <a asp-page="Index" class="btn btn-secondary">Hủy</a>
+    </form>
+</div>

@@ -1,0 +1,60 @@
+﻿
+@page
+@model NguyenTuanKietRazorPages.Pages.NewsArticles.CreateModel
+@{
+    Layout = null;
+}
+
+<!-- Nhúng Bootstrap CSS -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+
+<div class="modal-content">
+    <div class="modal-header bg-primary text-white">
+        <h5 class="modal-title">Thêm bài viết</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+    </div>
+    <form method="post" class="needs-validation" novalidate>
+        <div class="modal-body p-4">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <div class="mb-4">
+                        <label asp-for="NewsArticle.Title" class="form-label fw-bold text-primary">Tiêu đề</label>
+                        <input asp-for="NewsArticle.Title" class="form-control form-control-lg border-primary" placeholder="Nhập tiêu đề bài viết" required />
+                        <span asp-validation-for="NewsArticle.Title" class="text-danger"></span>
+                    </div>
+                    <div class="mb-4">
+                        <label asp-for="NewsArticle.Content" class="form-label fw-bold text-primary">Nội dung</label>
+                        <textarea asp-for="NewsArticle.Content" class="form-control border-primary" rows="6" placeholder="Nhập nội dung bài viết" required></textarea>
+                        <span asp-validation-for="NewsArticle.Content" class="text-danger"></span>
+                    </div>
+                    <div class="mb-4">
+                        <label asp-for="NewsArticle.CategoryId" class="form-label fw-bold text-primary">Danh mục</label>
+                        <select asp-for="NewsArticle.CategoryId" class="form-select border-primary" asp-items="Model.Categories" required>
+                            <!-- Không thêm option mặc định không hợp lệ -->
+                        </select>
+                        <span asp-validation-for="NewsArticle.CategoryId" class="text-danger"></span>
+                    </div>
+                    <div class="mb-4">
+                        <label asp-for="SelectedTagIds" class="form-label fw-bold text-primary">Thẻ</label>
+                        <select asp-for="SelectedTagIds" class="form-select border-primary" asp-items="Model.Tags" multiple="multiple" required>
+                            <!-- Tùy chọn thẻ sẽ được populate từ Model.Tags -->
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer p-3 bg-light">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+            <button type="submit" class="btn btn-primary text-white" style="background: linear-gradient(90deg, #007bff, #0056b3); border: none;">
+                Lưu
+            </button>
+        </div>
+    </form>
+
+    <!-- Nhúng Bootstrap JS và Popper.js -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js" integrity="sha384-fbbOQedDUMZZ5KreZpsbe1LCZPVmfTnH7ois6mU1QK+m14rQ1l2bGBq41eYeM/fS" crossorigin="anonymous"></script>
+
+    @section Scripts {
+        <partial name="_ValidationScriptsPartial" />
+    }
+</script>

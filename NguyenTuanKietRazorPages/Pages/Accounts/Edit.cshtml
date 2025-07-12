@@ -1,0 +1,42 @@
+﻿@page
+@model NguyenTuanKietRazorPages.Pages.Accounts.EditModel
+@{
+    ViewData["Title"] = "Chỉnh sửa tài khoản";
+}
+
+<div class="container mt-4">
+    <h2 class="mb-4">Chỉnh sửa tài khoản: @Model.Account.FullName</h2>
+    <form method="post" class="needs-validation" novalidate>
+        <input type="hidden" asp-for="Account.AccountId" />
+        <div class="form-group">
+            <label asp-for="Account.FullName" class="form-label">Họ và tên</label>
+            <input asp-for="Account.FullName" class="form-control" required />
+            <span asp-validation-for="Account.FullName" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Account.Email" class="form-label">Email</label>
+            <input asp-for="Account.Email" class="form-control" required />
+            <span asp-validation-for="Account.Email" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Account.Password" class="form-label">Mật khẩu (để trống nếu không đổi)</label> <!-- Thay PasswordHash bằng Password -->
+            <input asp-for="Account.Password" type="password" class="form-control" />
+            <span asp-validation-for="Account.Password" class="text-danger"></span> <!-- Thay PasswordHash bằng Password -->
+        </div>
+        <div class="form-group">
+            <label asp-for="Account.Role" class="form-label">Vai trò</label>
+            <select asp-for="Account.Role" class="form-control" required>
+                <option value="0" selected="@(Model.Account.Role == 0)">Lecturer</option>
+                <option value="1" selected="@(Model.Account.Role == 1)">Staff</option>
+                <option value="2" selected="@(Model.Account.Role == 2)">Admin</option>
+            </select>
+            <span asp-validation-for="Account.Role" class="text-danger"></span>
+        </div>
+        <button type="submit" class="btn btn-primary mt-3">Lưu thay đổi</button>
+        <a asp-page="./Index" class="btn btn-secondary mt-3">Hủy</a>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -1,0 +1,58 @@
+﻿@page
+@model NguyenTuanKietRazorPages.Pages.Accounts.IndexModel
+@{
+    ViewData["Title"] = "Quản lý tài khoản";
+}
+
+<div class="container mt-4">
+    <h2 class="mb-4">Danh sách tài khoản</h2>
+    <div class="row mb-3">
+        <div class="col-md-4">
+            <a asp-page="Create" class="btn btn-success">Thêm mới</a>
+        </div>
+        <div class="col-md-8">
+            <form method="get" class="form-inline">
+                <div class="form-group mr-2">
+                    <input asp-for="SearchEmail" class="form-control" placeholder="Tìm theo email" />
+                </div>
+                <div class="form-group mr-2">
+                    <select asp-for="SearchRole" class="form-control">
+                        <option value="">Tất cả vai trò</option>
+                        <option value="0">Lecturer</option>
+                        <option value="1">Staff</option>
+                        <option value="2">Admin</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary">Tìm kiếm</button>
+            </form>
+        </div>
+    </div>
+    <div class="row">
+        @foreach (var account in Model.Accounts)
+        {
+            <div class="col-md-4 mb-4">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">@account.FullName</h5>
+                        <p class="card-text"><small class="text-muted">Email: @account.Email</small></p>
+                        <p class="card-text"><small class="text-muted">Vai trò: @(account.Role == 0 ? "Lecturer" : account.Role == 1 ? "Staff" : "Admin")</small></p>
+                        <div class="btn-group">
+                            <a asp-page="Edit" asp-route-id="@account.AccountId" class="btn btn-warning btn-sm">Sửa</a>
+                            <button type="button" class="btn btn-danger btn-sm" onclick="confirmDelete('@account.AccountId', '@account.FullName')">Xóa</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function confirmDelete(accountId, name) {
+            if (confirm(`Bạn có chắc muốn xóa tài khoản "${name}"?`)) {
+                window.location.href = `/Accounts/Delete?id=${accountId}`;
+            }
+        }
+    </script>
+}

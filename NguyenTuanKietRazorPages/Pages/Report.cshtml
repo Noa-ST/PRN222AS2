@@ -1,0 +1,59 @@
+﻿@page
+@using FUNewsManagementSystem.Core.Models
+@model NguyenTuanKietRazorPages.Pages.ReportModel
+@{
+    ViewData["Title"] = "Báo cáo thống kê";
+}
+
+<div class="container mt-4">
+    <h2 class="mb-4">Báo cáo thống kê bài viết</h2>
+    <form method="post" class="mb-4">
+        <div class="form-row">
+            <div class="form-group col-md-4">
+                <label asp-for="StartDate" class="form-label">Từ ngày</label>
+                <input asp-for="StartDate" class="form-control" type="date" />
+            </div>
+            <div class="form-group col-md-4">
+                <label asp-for="EndDate" class="form-label">Đến ngày</label>
+                <input asp-for="EndDate" class="form-control" type="date" />
+            </div>
+            <div class="form-group col-md-4 align-self-end">
+                <button type="submit" class="btn btn-primary">Lọc</button>
+                <button type="submit" asp-page-handler="ExportExcel" class="btn btn-success ml-2">Xuất Excel</button>
+            </div>
+        </div>
+    </form>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Mã bài viết</th>
+                <th>Tiêu đề</th>
+                <th>Nội dung</th>
+                <th>Ngày tạo</th>
+                <th>Trạng thái</th>
+                <th>Mã danh mục</th>
+                <th>Người tạo</th>
+                <th>Người sửa</th>
+                <th>Ngày sửa</th>
+                <th>Tags</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var article in Model.Articles?.OrderByDescending(a => a.CreatedDate) ?? Enumerable.Empty<NewsArticle>())
+            {
+                <tr>
+                    <td>@article.ArticleId</td>
+                    <td>@article.Title</td>
+                    <td>@(string.IsNullOrEmpty(article.Content) ? "N/A" : article.Content.Substring(0, Math.Min(50, article.Content.Length)))</td>
+                    <td>@article.CreatedDate.ToString("dd/MM/yyyy HH:mm:ss")</td>
+                    <td>@(article.Status == 1 ? "Active" : "Inactive")</td>
+                    <td>@article.CategoryId</td>
+                    <td>@(article.CreatedBy ?? 0)</td>
+                    <td>@(article.ModifiedBy ?? 0)</td>
+                    <td>@(article.ModifiedDate?.ToString("dd/MM/yyyy HH:mm:ss") ?? "N/A")</td>
+                    <td>@string.Join(", ", article.NewsArticleTags?.Select(t => t.Tag?.TagName) ?? Enumerable.Empty<string>())</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

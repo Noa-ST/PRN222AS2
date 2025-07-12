@@ -1,0 +1,30 @@
+﻿@page
+@model NguyenTuanKietRazorPages.Pages.Tags.IndexModel
+@{
+    ViewData["Title"] = "Quản lý thẻ";
+}
+
+<h2>Quản lý thẻ</h2>
+<a asp-page="Create" class="btn btn-primary">Thêm thẻ mới</a>
+<table class="table table-bordered mt-3">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Tên thẻ</th>
+            <th>Thao tác</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var tag in Model.Tags)
+        {
+            <tr>
+                <td>@tag.TagId</td>
+                <td>@tag.TagName</td>
+                <td>
+                    <a asp-page="Edit" asp-route-id="@tag.TagId" class="btn btn-warning btn-sm">Sửa</a>
+                    <a asp-page="Delete" asp-route-id="@tag.TagId" class="btn btn-danger btn-sm">Xóa</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -1,0 +1,44 @@
+﻿@page "{id:int}"
+@model NguyenTuanKietRazorPages.Pages.Tags.EditModel
+@{
+    ViewData["Title"] = "Chỉnh sửa thẻ";
+}
+
+<div class="container mt-5">
+    <h2 class="mb-4 text-primary">Chỉnh sửa thẻ: @Model.Tag.TagName</h2>
+    <div class="card shadow-sm p-4">
+        <form method="post" class="needs-validation" novalidate>
+            <input type="hidden" asp-for="Tag.TagId" />
+            <div class="mb-3">
+                <label asp-for="Tag.TagName" class="form-label text-dark">Tên thẻ</label>
+                <input asp-for="Tag.TagName" class="form-control form-control-lg" required />
+                <span asp-validation-for="Tag.TagName" class="text-danger"></span>
+            </div>
+            <div class="d-flex gap-2">
+                <button type="submit" class="btn btn-primary btn-lg">Lưu thay đổi</button>
+                <a asp-page="./Index" class="btn btn-secondary btn-lg">Hủy</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        (function () {
+            'use strict';
+            window.addEventListener('load', function () {
+                var forms = document.getElementsByClassName('needs-validation');
+                var validation = Array.prototype.filter.call(forms, function (form) {
+                    form.addEventListener('submit', function (event) {
+                        if (form.checkValidity() === false) {
+                            event.preventDefault();
+                            event.stopPropagation();
+                        }
+                        form.classList.add('was-validated');
+                    }, false);
+                });
+            }, false);
+        })();
+    </script>
+}

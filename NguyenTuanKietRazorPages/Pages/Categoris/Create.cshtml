@@ -1,0 +1,52 @@
+﻿@page
+@model NguyenTuanKietRazorPages.Pages.Categoris.CreateModel
+@{
+    ViewData["Title"] = "Thêm danh mục";
+}
+
+<div class="container mt-5">
+    <h2 class="mb-4 text-primary">Thêm danh mục mới</h2>
+    <div class="card shadow-sm p-4">
+        <form method="post" class="needs-validation" novalidate>
+            <div class="mb-3">
+                <label asp-for="Category.CategoryName" class="form-label text-dark">Tên danh mục</label>
+                <input asp-for="Category.CategoryName" class="form-control form-control-lg" required />
+                <span asp-validation-for="Category.CategoryName" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="Category.Status" class="form-label text-dark">Trạng thái</label>
+                <select asp-for="Category.Status" class="form-select form-select-lg" required>
+                    <option value="1">Hoạt động</option>
+                    <option value="0">Không hoạt động</option>
+                </select>
+                <span asp-validation-for="Category.Status" class="text-danger"></span>
+            </div>
+            <div class="d-flex gap-2">
+                <button type="submit" class="btn btn-primary btn-lg">Lưu</button>
+                <a asp-page="./Index" class="btn btn-secondary btn-lg">Hủy</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        // Custom validation styling
+        (function () {
+            'use strict';
+            window.addEventListener('load', function () {
+                var forms = document.getElementsByClassName('needs-validation');
+                var validation = Array.prototype.filter.call(forms, function (form) {
+                    form.addEventListener('submit', function (event) {
+                        if (form.checkValidity() === false) {
+                            event.preventDefault();
+                            event.stopPropagation();
+                        }
+                        form.classList.add('was-validated');
+                    }, false);
+                });
+            }, false);
+        })();
+    </script>
+}

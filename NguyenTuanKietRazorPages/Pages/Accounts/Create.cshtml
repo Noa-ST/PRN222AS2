@@ -1,0 +1,57 @@
+﻿@page
+@model NguyenTuanKietRazorPages.Pages.Accounts.CreateModel
+@{
+    ViewData["Title"] = "Thêm tài khoản";
+}
+
+<div class="container mt-4">
+    <h2 class="mb-4">Thêm tài khoản mới</h2>
+
+    @* Hiển thị lỗi chung *@
+    @if (!ViewData.ModelState.IsValid)
+    {
+        <div class="alert alert-danger">
+            @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+            {
+                <p>@error.ErrorMessage</p>
+            }
+        </div>
+    }
+
+    <form method="post" class="needs-validation" novalidate>
+        <div class="form-group">
+            <label asp-for="Account.FullName" class="form-label">Họ và tên</label>
+            <input asp-for="Account.FullName" class="form-control" required />
+            <span asp-validation-for="Account.FullName" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Account.Email" class="form-label">Email</label>
+            <input asp-for="Account.Email" class="form-control" required />
+            <span asp-validation-for="Account.Email" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Account.Password" class="form-label">Mật khẩu</label>
+            <input asp-for="Account.Password" type="password" class="form-control" required />
+            <span asp-validation-for="Account.Password" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Account.Role" class="form-label">Vai trò</label>
+            <select asp-for="Account.Role" class="form-control" required>
+                <option value="2">Lecturer</option>
+                <option value="1">Staff</option>
+                <option value="0">Admin</option>
+            </select>
+            <span asp-validation-for="Account.Role" class="text-danger"></span>
+        </div>
+
+        <button type="submit" class="btn btn-primary mt-3">Lưu</button>
+        <a asp-page="./Index" class="btn btn-secondary mt-3">Hủy</a>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

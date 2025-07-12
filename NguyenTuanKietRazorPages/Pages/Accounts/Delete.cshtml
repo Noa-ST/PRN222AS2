@@ -1,0 +1,17 @@
+﻿@page
+@model NguyenTuanKietRazorPages.Pages.Accounts.DeleteModel
+@{
+    ViewData["Title"] = "Xóa tài khoản";
+}
+
+<div class="container mt-4">
+    <h2 class="mb-4">Xác nhận xóa tài khoản</h2>
+    <div class="alert alert-danger">
+        Bạn có chắc muốn xóa tài khoản "<strong>@Model.Account.FullName</strong>"?
+    </div>
+    <form method="post">
+        <input type="hidden" asp-for="Account.AccountId" />
+        <button type="submit" class="btn btn-danger">Xóa</button>
+        <a asp-page="./Index" class="btn btn-secondary">Hủy</a>
+    </form>
+</div>

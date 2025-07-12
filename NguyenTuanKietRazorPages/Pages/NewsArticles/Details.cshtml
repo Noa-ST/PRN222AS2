@@ -1,0 +1,57 @@
+﻿
+@page "{id:int}"
+@model NguyenTuanKietRazorPages.Pages.NewsArticles.DetailsModel
+@{
+    ViewData["Title"] = "Chi tiết tin tức";
+}
+
+<!-- Nhúng Bootstrap CSS -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+
+<div class="container mt-4">
+    <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white">
+            <h2 class="mb-0">@Model.NewsArticle.Title</h2>
+        </div>
+        <div class="card-body p-4">
+            <p class="text-muted mb-3">Danh mục: @(Model.Categories?.FirstOrDefault(c => c.Value == Model.NewsArticle.CategoryId.ToString())?.Text ?? "Không xác định")</p>
+            <p class="card-text">@Model.NewsArticle.Content</p>
+            <div class="mt-3">
+                <h5 class="text-dark">Các thẻ liên quan:</h5>
+                @if (Model.TagNames != null && Model.TagNames.Count > 0)
+                {
+                    <ul class="list-inline">
+                        @foreach (var tag in Model.TagNames)
+                        {
+                            <li class="list-inline-item badge bg-info text-dark">@tag</li>
+                        }
+                    </ul>
+                }
+                else
+                {
+                    <p class="text-muted">Không có thẻ nào được gắn.</p>
+                }
+            </div>
+
+            <div class="mt-3">
+                <p class="text-muted mb-1"><strong>Thời gian tạo:</strong> @Model.NewsArticle.CreatedDate.ToString("dd/MM/yyyy HH:mm")</p>
+                <p class="text-muted mb-1"><strong>Người tạo:</strong> @(Model.CreatedByName ?? "Chưa xác định")</p>
+                @if (!string.IsNullOrEmpty(Model.ModifiedByName) && Model.NewsArticle.ModifiedDate.HasValue)
+                {
+                    <p class="text-muted mb-1"><strong>Chỉnh sửa bởi:</strong> @Model.ModifiedByName</p>
+                    <p class="text-muted"><strong>Thời gian chỉnh sửa:</strong> @Model.NewsArticle.ModifiedDate.Value.ToString("dd/MM/yyyy HH:mm")</p>
+                }
+                else
+                {
+                    <p class="text-muted">Chưa có thông tin chỉnh sửa.</p>
+                }
+            </div>
+        </div>
+        <div class="card-footer bg-light p-3">
+            <a asp-page="/News/Index" class="btn btn-secondary">Quay lại</a>
+        </div>
+    </div>
+</div>
+
+<!-- Nhúng Bootstrap JS và Popper.js -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js" integrity="sha384-fbbOQedDUMZZ5KreZpsbe1LCZPVmfTnH7ois6mU1QK+m14rQ1l2bGBq41eYeM/fS" crossorigin="anonymous"></script>

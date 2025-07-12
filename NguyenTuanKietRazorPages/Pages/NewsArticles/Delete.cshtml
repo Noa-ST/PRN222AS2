@@ -1,0 +1,17 @@
+﻿@page "{id:int}"
+@model NguyenTuanKietRazorPages.Pages.NewsArticles.DeleteModel
+@{
+    ViewData["Title"] = "Xóa bài viết";
+}
+
+<div class="container mt-4">
+    <h2 class="mb-4">Xác nhận xóa bài viết</h2>
+    <div class="alert alert-danger">
+        Bạn có chắc muốn xóa bài viết "<strong>@Model.NewsArticle?.Title ?? 'Không tìm thấy tiêu đề'</strong>"?
+    </div>
+    <form method="post">
+        <input type="hidden" asp-for="NewsArticle.ArticleId" />
+        <button type="submit" class="btn btn-danger">Xóa</button>
+        <a asp-page="./Index" class="btn btn-secondary">Hủy</a>
+    </form>
+</div>
