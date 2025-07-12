@@ -103,7 +103,7 @@ Console.WriteLine("Authentication middleware applied");
 app.UseAuthorization();
 app.UseSession();
 Console.WriteLine("Session middleware applied");
-
+app.MapHub<NewsHub>("/newshub");
 app.MapRazorPages();
 Console.WriteLine("RazorPages middleware applied");
 
