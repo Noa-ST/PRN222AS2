@@ -21,15 +21,13 @@ namespace FUNewsManagementSystem.Core.Models
 
         [Required(ErrorMessage = "Danh mục là bắt buộc")]
         public int CategoryId { get; set; }
-        //public Category Category { get; set; }
+     
 
-        public int? CreatedBy { get; set; } // Thay đổi thành nullable int
-        // Loại bỏ ForeignKey("Creator") để tránh yêu cầu đối tượng Account đầy đủ
-        // public Account Creator { get; set; }
+        public int? CreatedBy { get; set; } 
+   
+        public int? ModifiedBy { get; set; } 
+        public DateTime? ModifiedDate { get; set; } 
 
-        public int? ModifiedBy { get; set; } // Thêm trường này
-        public DateTime? ModifiedDate { get; set; } // Thêm trường này
-
-        public List<NewsArticleTag> NewsArticleTags { get; set; } = new(); // Khởi tạo mặc định để tránh null
+        public List<NewsArticleTag> NewsArticleTags { get; set; } = new(); 
     }
 }

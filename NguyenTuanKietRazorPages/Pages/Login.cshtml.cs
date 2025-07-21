@@ -40,7 +40,7 @@ namespace NguyenTuanKietRazorPages.Pages
             if (User.Identity?.IsAuthenticated ?? false)
             {
                 var role = User.FindFirst(ClaimTypes.Role)?.Value;
-                return RedirectToRoleBasedPage(role);
+                return RedirectToPage("/News/Index"); // Chuyển hướng về Trang chủ nếu đã đăng nhập
             }
             ViewData["ReturnUrl"] = returnUrl;
             return Page();
@@ -85,18 +85,12 @@ namespace NguyenTuanKietRazorPages.Pages
                 return Redirect(returnUrl);
             }
 
-            return RedirectToRoleBasedPage(roleName);
+            return RedirectToPage("/News/Index"); // Chuyển hướng về Trang chủ sau khi đăng nhập
         }
 
         private IActionResult RedirectToRoleBasedPage(string role)
         {
-            return role switch
-            {
-                "Lecturer" => RedirectToPage("/News/Index"),
-                "Staff" => RedirectToPage("/Dashboard/Staff"),
-                "Admin" => RedirectToPage("/Dashboard/Admin"),
-                _ => RedirectToPage("/News/Index")
-            };
+            return RedirectToPage("/News/Index");
         }
     }
 }

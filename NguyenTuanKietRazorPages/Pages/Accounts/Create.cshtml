@@ -4,54 +4,144 @@
     ViewData["Title"] = "Thêm tài khoản";
 }
 
-<div class="container mt-4">
-    <h2 class="mb-4">Thêm tài khoản mới</h2>
+<!-- Nhúng Bootstrap CSS -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
 
-    @* Hiển thị lỗi chung *@
-    @if (!ViewData.ModelState.IsValid)
-    {
-        <div class="alert alert-danger">
-            @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
-            {
-                <p>@error.ErrorMessage</p>
-            }
-        </div>
+<style>
+    .form-card {
+        max-width: 500px;
+        margin: 0 auto;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        border-radius: 10px;
     }
 
-    <form method="post" class="needs-validation" novalidate>
-        <div class="form-group">
-            <label asp-for="Account.FullName" class="form-label">Họ và tên</label>
-            <input asp-for="Account.FullName" class="form-control" required />
-            <span asp-validation-for="Account.FullName" class="text-danger"></span>
-        </div>
+    .card-header {
+        background: linear-gradient(90deg, #007bff, #0056b3);
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
+        padding: 15px;
+    }
 
-        <div class="form-group">
-            <label asp-for="Account.Email" class="form-label">Email</label>
-            <input asp-for="Account.Email" class="form-control" required />
-            <span asp-validation-for="Account.Email" class="text-danger"></span>
-        </div>
+    .card-title {
+        color: #fff;
+        font-size: 1.5rem;
+        font-weight: 600;
+    }
 
-        <div class="form-group">
-            <label asp-for="Account.Password" class="form-label">Mật khẩu</label>
-            <input asp-for="Account.Password" type="password" class="form-control" required />
-            <span asp-validation-for="Account.Password" class="text-danger"></span>
-        </div>
+    .form-body {
+        padding: 20px;
+    }
 
-        <div class="form-group">
-            <label asp-for="Account.Role" class="form-label">Vai trò</label>
-            <select asp-for="Account.Role" class="form-control" required>
-                <option value="2">Lecturer</option>
-                <option value="1">Staff</option>
-                <option value="0">Admin</option>
-            </select>
-            <span asp-validation-for="Account.Role" class="text-danger"></span>
-        </div>
+    .form-label {
+        font-weight: 500;
+        color: #007bff;
+    }
 
-        <button type="submit" class="btn btn-primary mt-3">Lưu</button>
-        <a asp-page="./Index" class="btn btn-secondary mt-3">Hủy</a>
-    </form>
+    .form-control {
+        border-color: #007bff;
+        border-radius: 5px;
+    }
+
+        .form-control:focus {
+            border-color: #0056b3;
+            box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+        }
+
+    .btn-custom {
+        background: linear-gradient(90deg, #007bff, #0056b3);
+        border: none;
+        border-radius: 5px;
+        padding: 8px 20px;
+        color: white;
+        transition: all 0.3s ease;
+    }
+
+        .btn-custom:hover {
+            background: linear-gradient(90deg, #0056b3, #003366);
+            transform: translateY(-2px);
+        }
+
+    .btn-secondary {
+        background-color: #6c757d;
+        border-color: #6c757d;
+    }
+
+        .btn-secondary:hover {
+            background-color: #5a6268;
+            border-color: #5a6268;
+        }
+
+    .alert-danger {
+        border-radius: 5px;
+    }
+</style>
+
+<div class="container mt-4">
+    <div class="card form-card">
+        <div class="card-header">
+            <h2 class="card-title">Thêm tài khoản mới</h2>
+        </div>
+        <div class="card-body form-body">
+            @if (!ViewData.ModelState.IsValid)
+            {
+                <div class="alert alert-danger mb-4">
+                    @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                    {
+                        <p>@error.ErrorMessage</p>
+                    }
+                </div>
+            }
+            <form method="post" class="needs-validation" novalidate>
+                <div class="mb-4">
+                    <label asp-for="Account.FullName" class="form-label">Họ và tên</label>
+                    <input asp-for="Account.FullName" class="form-control" required />
+                    <span asp-validation-for="Account.FullName" class="text-danger"></span>
+                </div>
+                <div class="mb-4">
+                    <label asp-for="Account.Email" class="form-label">Email</label>
+                    <input asp-for="Account.Email" class="form-control" required />
+                    <span asp-validation-for="Account.Email" class="text-danger"></span>
+                </div>
+                <div class="mb-4">
+                    <label asp-for="Account.Password" class="form-label">Mật khẩu</label>
+                    <input asp-for="Account.Password" type="password" class="form-control" required />
+                    <span asp-validation-for="Account.Password" class="text-danger"></span>
+                </div>
+                <div class="mb-4">
+                    <label asp-for="Account.Role" class="form-label">Vai trò</label>
+                    <select asp-for="Account.Role" class="form-select" required>
+                        <option value="2">Lecturer</option>
+                        <option value="1">Staff</option>
+                        <option value="0">Admin</option>
+                    </select>
+                    <span asp-validation-for="Account.Role" class="text-danger"></span>
+                </div>
+                <div class="d-flex gap-3">
+                    <button type="submit" class="btn btn-custom">Lưu</button>
+                    <a asp-page="./Index" class="btn btn-secondary">Hủy</a>
+                </div>
+            </form>
+        </div>
+    </div>
 </div>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+    <script>
+        (function () {
+            'use strict';
+            window.addEventListener('load', function () {
+                var forms = document.getElementsByClassName('needs-validation');
+                var validation = Array.prototype.filter.call(forms, function (form) {
+                    form.addEventListener('submit', function (event) {
+                        if (form.checkValidity() === false) {
+                            event.preventDefault();
+                            event.stopPropagation();
+                        }
+                        form.classList.add('was-validated');
+                    }, false);
+                });
+            }, false);
+        })();
+    </script>
 }

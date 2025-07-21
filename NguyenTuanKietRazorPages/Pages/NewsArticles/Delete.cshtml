@@ -7,7 +7,7 @@
 <div class="container mt-4">
     <h2 class="mb-4">Xác nhận xóa bài viết</h2>
     <div class="alert alert-danger">
-        Bạn có chắc muốn xóa bài viết "<strong>@Model.NewsArticle?.Title ?? 'Không tìm thấy tiêu đề'</strong>"?
+        Bạn có chắc muốn xóa bài viết "<strong>@Model.NewsArticle?.Title</strong>"?
     </div>
     <form method="post">
         <input type="hidden" asp-for="NewsArticle.ArticleId" />

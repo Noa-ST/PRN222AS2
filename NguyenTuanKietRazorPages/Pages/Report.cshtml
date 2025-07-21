@@ -5,55 +5,134 @@
     ViewData["Title"] = "Báo cáo thống kê";
 }
 
+<!-- Nhúng Bootstrap CSS -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+
+<style>
+    .report-card {
+        margin: 0 auto;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        border-radius: 10px;
+    }
+
+    .card-header {
+        background: linear-gradient(90deg, #007bff, #0056b3);
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
+        padding: 15px;
+    }
+
+    .card-title {
+        color: #fff;
+        font-size: 1.5rem;
+        font-weight: 600;
+    }
+
+    .card-body {
+        padding: 20px;
+    }
+
+    .form-label {
+        font-weight: 500;
+        color: #007bff;
+    }
+
+    .form-control {
+        border-color: #007bff;
+        border-radius: 5px;
+    }
+
+        .form-control:focus {
+            border-color: #0056b3;
+            box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+        }
+
+    .btn-custom {
+        background: linear-gradient(90deg, #007bff, #0056b3);
+        border: none;
+        border-radius: 5px;
+        padding: 8px 20px;
+        color: white;
+        transition: all 0.3s ease;
+    }
+
+        .btn-custom:hover {
+            background: linear-gradient(90deg, #0056b3, #003366);
+            transform: translateY(-2px);
+        }
+
+    .btn-success {
+        background: linear-gradient(90deg, #28a745, #218838);
+    }
+
+        .btn-success:hover {
+            background: linear-gradient(90deg, #218838, #1a6629);
+        }
+
+    .table {
+        border-radius: 8px;
+        overflow: hidden;
+    }
+
+        .table th {
+            background-color: #007bff;
+            color: white;
+        }
+</style>
+
 <div class="container mt-4">
-    <h2 class="mb-4">Báo cáo thống kê bài viết</h2>
-    <form method="post" class="mb-4">
-        <div class="form-row">
-            <div class="form-group col-md-4">
-                <label asp-for="StartDate" class="form-label">Từ ngày</label>
-                <input asp-for="StartDate" class="form-control" type="date" />
-            </div>
-            <div class="form-group col-md-4">
-                <label asp-for="EndDate" class="form-label">Đến ngày</label>
-                <input asp-for="EndDate" class="form-control" type="date" />
-            </div>
-            <div class="form-group col-md-4 align-self-end">
-                <button type="submit" class="btn btn-primary">Lọc</button>
-                <button type="submit" asp-page-handler="ExportExcel" class="btn btn-success ml-2">Xuất Excel</button>
-            </div>
+    <div class="card report-card">
+        <div class="card-header">
+            <h2 class="card-title">Báo cáo thống kê bài viết</h2>
         </div>
-    </form>
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th>Mã bài viết</th>
-                <th>Tiêu đề</th>
-                <th>Nội dung</th>
-                <th>Ngày tạo</th>
-                <th>Trạng thái</th>
-                <th>Mã danh mục</th>
-                <th>Người tạo</th>
-                <th>Người sửa</th>
-                <th>Ngày sửa</th>
-                <th>Tags</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var article in Model.Articles?.OrderByDescending(a => a.CreatedDate) ?? Enumerable.Empty<NewsArticle>())
-            {
-                <tr>
-                    <td>@article.ArticleId</td>
-                    <td>@article.Title</td>
-                    <td>@(string.IsNullOrEmpty(article.Content) ? "N/A" : article.Content.Substring(0, Math.Min(50, article.Content.Length)))</td>
-                    <td>@article.CreatedDate.ToString("dd/MM/yyyy HH:mm:ss")</td>
-                    <td>@(article.Status == 1 ? "Active" : "Inactive")</td>
-                    <td>@article.CategoryId</td>
-                    <td>@(article.CreatedBy ?? 0)</td>
-                    <td>@(article.ModifiedBy ?? 0)</td>
-                    <td>@(article.ModifiedDate?.ToString("dd/MM/yyyy HH:mm:ss") ?? "N/A")</td>
-                    <td>@string.Join(", ", article.NewsArticleTags?.Select(t => t.Tag?.TagName) ?? Enumerable.Empty<string>())</td>
-                </tr>
-            }
-        </tbody>
-    </table>
+        <div class="card-body">
+            <form method="post" class="row g-3 mb-4">
+                <div class="col-md-4">
+                    <label asp-for="StartDate" class="form-label">Từ ngày</label>
+                    <input asp-for="StartDate" class="form-control" type="date" />
+                </div>
+                <div class="col-md-4">
+                    <label asp-for="EndDate" class="form-label">Đến ngày</label>
+                    <input asp-for="EndDate" class="form-control" type="date" />
+                </div>
+                <div class="col-md-4 d-flex align-items-end">
+                    <button type="submit" class="btn btn-custom me-2">Lọc</button>
+                    <button type="submit" asp-page-handler="ExportExcel" class="btn btn-success">Xuất Excel</button>
+                </div>
+            </form>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Mã bài viết</th>
+                        <th>Tiêu đề</th>
+                        <th>Nội dung</th>
+                        <th>Ngày tạo</th>
+                        <th>Trạng thái</th>
+                        <th>Mã danh mục</th>
+                        <th>Người tạo</th>
+                        <th>Người sửa</th>
+                        <th>Ngày sửa</th>
+                        <th>Tags</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var article in Model.Articles?.OrderByDescending(a => a.CreatedDate) ?? Enumerable.Empty<NewsArticle>())
+                    {
+                        <tr>
+                            <td>@article.ArticleId</td>
+                            <td>@article.Title</td>
+                            <td>@(string.IsNullOrEmpty(article.Content) ? "N/A" : article.Content.Substring(0, Math.Min(50, article.Content.Length)))</td>
+                            <td>@article.CreatedDate.ToString("dd/MM/yyyy HH:mm:ss")</td>
+                            <td>@(article.Status == 1 ? "Active" : "Inactive")</td>
+                            <td>@article.CategoryId</td>
+                            <td>@(article.CreatedBy ?? 0)</td>
+                            <td>@(article.ModifiedBy ?? 0)</td>
+                            <td>@(article.ModifiedDate?.ToString("dd/MM/yyyy HH:mm:ss") ?? "N/A")</td>
+                            <td>@string.Join(", ", article.NewsArticleTags?.Select(t => t.Tag?.TagName) ?? Enumerable.Empty<string>())</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>

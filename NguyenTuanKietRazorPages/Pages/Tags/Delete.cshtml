@@ -4,23 +4,88 @@
     ViewData["Title"] = "Xóa thẻ";
 }
 
-<h2>Xác nhận xóa</h2>
+<!-- Nhúng Bootstrap CSS -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
 
-@if (!ModelState.IsValid)
-{
-    <div class="alert alert-danger">
-        @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
-        {
-            <p>@error.ErrorMessage</p>
+<style>
+    .form-card {
+        max-width: 500px;
+        margin: 0 auto;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        border-radius: 10px;
+    }
+
+    .card-header {
+        background: linear-gradient(90deg, #dc3545, #a71d2a);
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
+        padding: 15px;
+    }
+
+    .card-title {
+        color: #fff;
+        font-size: 1.5rem;
+        font-weight: 600;
+    }
+
+    .form-body {
+        padding: 20px;
+    }
+
+    .alert-danger {
+        border-radius: 5px;
+    }
+
+    .btn-custom {
+        background: linear-gradient(90deg, #dc3545, #a71d2a);
+        border: none;
+        border-radius: 5px;
+        padding: 8px 20px;
+        color: white;
+        transition: all 0.3s ease;
+    }
+
+        .btn-custom:hover {
+            background: linear-gradient(90deg, #a71d2a, #7a151e);
+            transform: translateY(-2px);
         }
-    </div>
-}
 
-<div>
-    <p>Bạn có chắc chắn muốn xóa thẻ <strong>@Model.Tag.TagName</strong>?</p>
-    <form method="post">
-        <input type="hidden" asp-for="Tag.TagId" />
-        <button type="submit" class="btn btn-danger">Xóa</button>
-        <a asp-page="Index" class="btn btn-secondary">Hủy</a>
-    </form>
+    .btn-secondary {
+        background-color: #6c757d;
+        border-color: #6c757d;
+    }
+
+        .btn-secondary:hover {
+            background-color: #5a6268;
+            border-color: #5a6268;
+        }
+</style>
+
+<div class="container mt-4">
+    <div class="card form-card">
+        <div class="card-header">
+            <h2 class="card-title">Xác nhận xóa thẻ</h2>
+        </div>
+        <div class="card-body form-body">
+            @if (!ModelState.IsValid)
+            {
+                <div class="alert alert-danger mb-4">
+                    @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                    {
+                        <p>@error.ErrorMessage</p>
+                    }
+                </div>
+            }
+            <div class="mb-4">
+                <p>Bạn có chắc chắn muốn xóa thẻ <strong>@Model.Tag.TagName</strong>?</p>
+            </div>
+            <form method="post">
+                <input type="hidden" asp-for="Tag.TagId" />
+                <div class="d-flex gap-3">
+                    <button type="submit" class="btn btn-custom">Xóa</button>
+                    <a asp-page="Index" class="btn btn-secondary">Hủy</a>
+                </div>
+            </form>
+        </div>
+    </div>
 </div>

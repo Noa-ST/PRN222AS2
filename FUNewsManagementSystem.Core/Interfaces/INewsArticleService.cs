@@ -9,8 +9,8 @@ namespace FUNewsManagementSystem.Core.Interfaces
         Task<List<NewsArticle>> GetActiveArticlesAsync();
         Task<NewsArticle> GetByIdAsync(int id);
         Task<List<NewsArticle>> GetAllAsync();
-        Task AddAsync(NewsArticle article, int[] tagIds);
-        Task UpdateAsync(NewsArticle article, int[] tagIds);
+        Task AddAsync(NewsArticle article, int[] tagIds, string? connectionId = null);
+        Task UpdateAsync(NewsArticle article, int[] tagIds, string? connectionId = null);
         Task DeleteAsync(int id);
         Task<List<NewsArticle>> SearchAsync(string title, int? categoryId, int? tagId);
         Task<IList<NewsArticle>> SearchAsync(string title, int? categoryId, int? tagId, DateTime? startDate, DateTime? endDate); 

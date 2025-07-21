@@ -2,7 +2,7 @@
 {
     public interface INotificationService
     {
-        Task NotifyNewArticleAsync(string articleTitle);
-        Task NotifyArticleUpdatedAsync(string articleTitle);
+        Task NotifyNewArticleAsync(string title, int articleId, string? excludeConnectionId = null);
+        Task NotifyArticleUpdatedAsync(string title, int articleId, string? excludeConnectionId = null);
     }
 }

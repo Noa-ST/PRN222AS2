@@ -1,10 +1,8 @@
-﻿
-  using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using FUNewsManagementSystem.Core.Models;
 using FUNewsManagementSystem.Core.Interfaces;
-using System.Threading.Tasks;
 using System.Security.Claims;
 
 namespace NguyenTuanKietRazorPages.Pages.NewsArticles
@@ -34,16 +32,15 @@ namespace NguyenTuanKietRazorPages.Pages.NewsArticles
         public async Task<IActionResult> OnGetAsync(int id)
         {
             NewsArticle = await _newsArticleService.GetByIdAsync(id);
-            if (NewsArticle == null)
-            {
-                return NotFound();
-            }
-            await LoadDropdownsAsync();
+            if (NewsArticle == null) return NotFound();
+
             SelectedTagIds = NewsArticle.NewsArticleTags?.Select(t => t.TagId).ToList() ?? new List<int>();
+
+            await LoadDropdownsAsync();
             return Page();
         }
 
-        public async Task<IActionResult> OnPostAsync(int id, int[] tagIds)
+        public async Task<IActionResult> OnPostAsync(int id)
         {
             if (!ModelState.IsValid)
             {
@@ -51,33 +48,22 @@ namespace NguyenTuanKietRazorPages.Pages.NewsArticles
                 return Page();
             }
 
-            NewsArticle = await _newsArticleService.GetByIdAsync(id);
-            if (NewsArticle == null)
-            {
-                return NotFound();
-            }
+            var existingArticle = await _newsArticleService.GetByIdAsync(id);
+            if (existingArticle == null) return NotFound();
 
-            // Cập nhật các trường từ form
-            NewsArticle.CategoryId = NewsArticle.CategoryId; // Giữ nguyên hoặc cập nhật từ form nếu có
-            NewsArticle.Title = NewsArticle.Title; // Cập nhật từ form
-            NewsArticle.Content = NewsArticle.Content; // Cập nhật từ form
-            NewsArticle.Status = NewsArticle.Status; // Giữ nguyên hoặc cập nhật từ form
+            // Cập nhật thông tin
+            existingArticle.Title = NewsArticle.Title;
+            existingArticle.Content = NewsArticle.Content;
+            existingArticle.CategoryId = NewsArticle.CategoryId;
 
             var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
-            if (userIdClaim != null && int.TryParse(userIdClaim.Value, out int accountId))
+            if (userIdClaim != null && int.TryParse(userIdClaim.Value, out int userId))
             {
-                NewsArticle.ModifiedBy = accountId;
-                NewsArticle.ModifiedDate = DateTime.Now;
-                if (!NewsArticle.CreatedBy.HasValue)
-                {
-                    NewsArticle.CreatedBy = accountId;
-                }
+                existingArticle.ModifiedBy = userId;
+                existingArticle.ModifiedDate = DateTime.Now;
             }
 
-            // Cập nhật NewsArticleTags
-            NewsArticle.NewsArticleTags = tagIds?.Select(tid => new NewsArticleTag { ArticleId = id, TagId = tid }).ToList() ?? new List<NewsArticleTag>();
-
-            await _newsArticleService.UpdateAsync(NewsArticle, tagIds);
+            await _newsArticleService.UpdateAsync(existingArticle, SelectedTagIds.ToArray());
             return RedirectToPage("./Index");
         }
 

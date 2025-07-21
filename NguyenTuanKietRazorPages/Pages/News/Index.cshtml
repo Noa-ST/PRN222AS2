@@ -1,5 +1,4 @@
-﻿
-@page
+﻿@page
 @model NguyenTuanKietRazorPages.Pages.News.IndexModel
 @{
     ViewData["Title"] = "Xem tin tức";
@@ -7,39 +6,79 @@
 
 <!-- Nhúng Bootstrap CSS -->
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+<style>
+    .news-card {
+        height: 300px; /* Chiều cao cố định cho card */
+        overflow: hidden; /* Ẩn nội dung vượt quá */
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+
+    .card-content {
+        height: 100px; /* Chiều cao cố định cho nội dung */
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 4; /* Giới hạn 4 dòng */
+        -webkit-box-orient: vertical;
+    }
+
+    .card-footer {
+        margin-top: auto; /* Đẩy nút xuống dưới cùng */
+        padding-top: 10px;
+        border-top: 1px solid #eee;
+    }
+
+    .btn-container {
+        text-align: center; /* Căn giữa nút */
+    }
+</style>
 
 <div class="container mt-4">
-    <h2 class="mb-4">Danh sách tin tức</h2>
+    <h2 class="mb-4 text-center text-primary">Danh sách tin tức</h2>
     <div class="row mb-3">
-        <div class="col-md-8">
-            <form method="get" class="form-inline">
-                <div class="form-group mr-2">
-                    <input asp-for="SearchTitle" class="form-control" placeholder="Tìm theo tiêu đề" />
+        <div class="col-md-12">
+            <form method="get" class="row g-3 align-items-end">
+                <div class="col-md-4">
+                    <label class="form-label">Tìm theo tiêu đề</label>
+                    <input asp-for="SearchTitle" class="form-control" placeholder="Nhập tiêu đề..." />
                 </div>
-                <div class="form-group mr-2">
+                <div class="col-md-4">
+                    <label class="form-label">Chọn danh mục</label>
                     <select asp-for="SearchCategoryId" class="form-control" asp-items="Model.Categories">
                         <option value="">Tất cả danh mục</option>
                     </select>
                 </div>
-                <button type="submit" class="btn btn-primary">Tìm kiếm</button>
+                <div class="col-md-4">
+                    <button type="submit" class="btn btn-primary w-100">Tìm kiếm</button>
+                </div>
             </form>
         </div>
     </div>
-    <div class="row">
+    <div class="row row-cols-1 row-cols-md-3 g-4">
         @foreach (var article in Model.Articles)
         {
-            <div class="col-md-4 mb-4">
-                <div class="card h-100 shadow-sm">
+            <div class="col">
+                <div class="card news-card shadow-sm">
                     <div class="card-body">
-                        <h5 class="card-title">@article.Title</h5>
-                        <p class="card-text">@article.Content.Substring(0, Math.Min(100, article.Content.Length))...</p>
-                        <p class="card-text"><small class="text-muted">Danh mục: @Model.Categories.FirstOrDefault(c => c.Value == article.CategoryId.ToString())?.Text</small></p>
-                        <a asp-page="/NewsArticles/Details" asp-route-id="@article.ArticleId" class="btn btn-primary">Xem chi tiết</a>
+                        <h5 class="card-title fw-bold text-dark">@article.Title</h5>
+                        <p class="card-text card-content">@article.Content.Substring(0, Math.Min(100, article.Content.Length))...</p>
+                        <p class="card-text text-muted"><small>Danh mục: @Model.Categories.FirstOrDefault(c => c.Value == article.CategoryId.ToString())?.Text</small></p>
+                    </div>
+                    <div class="card-footer btn-container">
+                        <a asp-page="/NewsArticles/Details" asp-route-id="@article.ArticleId" class="btn btn-primary w-100">Xem chi tiết</a>
                     </div>
                 </div>
             </div>
         }
     </div>
+    @if (!Model.Articles.Any())
+    {
+        <div class="text-center mt-4">
+            <p class="text-muted">Không có tin tức nào để hiển thị.</p>
+        </div>
+    }
 </div>
 
 <!-- Nhúng Bootstrap JS và Popper.js -->

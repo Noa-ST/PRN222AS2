@@ -28,6 +28,8 @@ namespace NguyenTuanKietRazorPages.Pages.NewsArticles
 
         public SelectList Categories { get; set; }
         public SelectList Tags { get; set; }
+        [BindProperty(SupportsGet = true)]
+        public string? ConnectionId { get; set; }
 
         public async Task<IActionResult> OnGetAsync()
         {
@@ -43,59 +45,41 @@ namespace NguyenTuanKietRazorPages.Pages.NewsArticles
             if (NewsArticle.CategoryId <= 0)
             {
                 ModelState.AddModelError("NewsArticle.CategoryId", "Vui lòng chọn một danh mục.");
-                Console.WriteLine("CategoryId is invalid or not selected: " + NewsArticle.CategoryId);
             }
 
-            NewsArticle.CreatedDate = DateTime.Now;
-            NewsArticle.Status = 1;
-
             var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
-            Console.WriteLine($"UserIdClaim: {userIdClaim?.Value ?? "null"}");
-            if (userIdClaim != null)
+            if (userIdClaim != null && int.TryParse(userIdClaim.Value, out int accountId))
             {
-                if (int.TryParse(userIdClaim.Value, out int accountId))
-                {
-                    NewsArticle.CreatedBy = accountId;
-                    Console.WriteLine($"Before AddAsync, CreatedBy set to: {NewsArticle.CreatedBy}");
-                }
-                else
-                {
-                    Console.WriteLine($"Invalid UserIdClaim value: {userIdClaim.Value}");
-                    ModelState.AddModelError(string.Empty, "Giá trị UserId không hợp lệ.");
-                }
+                NewsArticle.CreatedBy = accountId;
             }
             else
             {
-                Console.WriteLine("UserId claim not found");
-                ModelState.AddModelError(string.Empty, "Không tìm thấy claim UserId.");
+                ModelState.AddModelError(string.Empty, "Không xác định được người dùng.");
             }
 
             if (!ModelState.IsValid)
             {
-                foreach (var kvp in ModelState)
-                {
-                    foreach (var error in kvp.Value.Errors)
-                    {
-                        Console.WriteLine($"Field {kvp.Key}: {error.ErrorMessage}");
-                    }
-                }
                 await LoadDropdownsAsync();
                 return Page();
             }
 
             try
             {
-                await _newsArticleService.AddAsync(NewsArticle, SelectedTagIds?.ToArray() ?? new int[0]);
-                Console.WriteLine($"Article added successfully, ArticleId: {NewsArticle.ArticleId}");
-                return RedirectToPage("Index");
+                // Lấy connectionId từ form (gửi bằng JS thông qua input ẩn)
+                var connectionId = Request.Form["connectionId"].ToString();
+
+                await _newsArticleService.AddAsync(NewsArticle, SelectedTagIds?.ToArray() ?? Array.Empty<int>(), connectionId);
+                return RedirectToPage("/NewsArticles/Index");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error adding article: {ex.Message}");
+                Console.WriteLine($"Exception: {ex.Message}");
+                ModelState.AddModelError(string.Empty, "Có lỗi xảy ra khi tạo bài viết.");
                 await LoadDropdownsAsync();
                 return Page();
             }
         }
+
 
         private async Task LoadDropdownsAsync()
         {

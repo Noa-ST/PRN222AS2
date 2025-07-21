@@ -40,63 +40,61 @@ namespace FUNewsManagementSystem.Core.Services
             return await _newsArticleRepository.GetAllAsync();
         }
 
-        public async Task AddAsync(NewsArticle article, int[] tagIds)
+        public async Task AddAsync(NewsArticle article, int[] tagIds, string? connectionId = null)
         {
-            Console.WriteLine($"In AddAsync, Received CreatedBy: {article.CreatedBy}");
             article.CreatedDate = DateTime.Now;
-            var userIdClaim = _httpContextAccessor.HttpContext?.User.FindFirst(ClaimTypes.NameIdentifier);
-            int accountId = 0;
-            if (userIdClaim != null && int.TryParse(userIdClaim.Value, out accountId))
-            {
-                Console.WriteLine($"User ID from claim: {accountId}");
-                // Chỉ gán nếu article.CreatedBy chưa được thiết lập
-                if (!article.CreatedBy.HasValue)
-                {
-                    article.CreatedBy = accountId;
-                }
-            }
-            else
-            {
-                Console.WriteLine("No valid user ID found in HttpContext");
-            }
             article.Status = 1;
-            await _newsArticleRepository.AddAsync(article, tagIds);
 
-            await _notificationService.NotifyNewArticleAsync(article.Title);
+            var userId = GetCurrentUserId();
+            if (userId.HasValue)
+            {
+                article.CreatedBy = userId.Value;
+            }
+
+            await _newsArticleRepository.AddAsync(article, tagIds);
+            await _notificationService.NotifyNewArticleAsync(article.Title, article.ArticleId, connectionId);
         }
 
-
-        public async Task UpdateAsync(NewsArticle article, int[] tagIds)
+        public async Task UpdateAsync(NewsArticle article, int[] tagIds, string? connectionId = null)
         {
-            Console.WriteLine($"In UpdateAsync, Received CreatedBy: {article.CreatedBy}, ModifiedBy: {article.ModifiedBy}");
-            var userIdClaim = _httpContextAccessor.HttpContext?.User.FindFirst(ClaimTypes.NameIdentifier);
-            if (userIdClaim != null && int.TryParse(userIdClaim.Value, out int accountId))
+            var userId = GetCurrentUserId();
+            if (userId.HasValue)
             {
-                Console.WriteLine($"User ID from claim: {accountId}");
-                // Gán ModifiedBy
-                article.ModifiedBy = accountId;
+                article.ModifiedBy = userId.Value;
                 article.ModifiedDate = DateTime.Now;
-                // Giữ nguyên CreatedBy nếu đã có, chỉ gán nếu null
-                if (!article.CreatedBy.HasValue && article.CreatedBy != 0)
+
+                if (!article.CreatedBy.HasValue || article.CreatedBy == 0)
                 {
-                    article.CreatedBy = accountId;
+                    article.CreatedBy = userId.Value;
                 }
-            }
-            else
-            {
-                Console.WriteLine("No valid user ID found in HttpContext");
             }
 
             await _newsArticleRepository.UpdateAsync(article);
-
             await _newsArticleTagRepository.DeleteByArticleIdAsync(article.ArticleId);
+
             foreach (var tagId in tagIds)
             {
-                await _newsArticleTagRepository.AddAsync(new NewsArticleTag { ArticleId = article.ArticleId, TagId = tagId });
+                await _newsArticleTagRepository.AddAsync(new NewsArticleTag
+                {
+                    ArticleId = article.ArticleId,
+                    TagId = tagId
+                });
             }
 
-            await _notificationService.NotifyArticleUpdatedAsync(article.Title);
+            await _notificationService.NotifyArticleUpdatedAsync(article.Title, article.ArticleId, connectionId);
         }
+
+        // Helper để lấy userId
+        private int? GetCurrentUserId()
+        {
+            var claim = _httpContextAccessor.HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier);
+            if (claim != null && int.TryParse(claim.Value, out int userId))
+            {
+                return userId;
+            }
+            return null;
+        }
+
 
         public async Task DeleteAsync(int id)
         {

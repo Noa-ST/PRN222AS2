@@ -53,6 +53,6 @@ public class AccountService : IAccountService
 
     public async Task<Account> GetByEmailAsync(string email)
     {
-        return await _accountRepository.GetByEmailAsync(email); // Sử dụng trực tiếp từ repository
+        return await _accountRepository.GetByEmailAsync(email); 
     }
 }

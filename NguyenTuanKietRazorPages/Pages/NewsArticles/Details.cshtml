@@ -1,5 +1,4 @@
-﻿
-@page "{id:int}"
+﻿@page "{id:int}"
 @model NguyenTuanKietRazorPages.Pages.NewsArticles.DetailsModel
 @{
     ViewData["Title"] = "Chi tiết tin tức";
@@ -8,16 +7,87 @@
 <!-- Nhúng Bootstrap CSS -->
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
 
+<style>
+    .details-card {
+        max-width: 800px;
+        margin: 0 auto;
+        border: none;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        border-radius: 10px;
+    }
+
+    .card-header {
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
+        padding: 15px;
+        background: linear-gradient(90deg, #007bff, #0056b3);
+    }
+
+    .card-body {
+        padding: 25px;
+    }
+
+    .card-title {
+        font-size: 1.8rem;
+        font-weight: 600;
+        color: #fff;
+    }
+
+    .info-section {
+        margin-bottom: 20px;
+    }
+
+        .info-section h5 {
+            color: #007bff;
+            font-weight: 500;
+            margin-bottom: 10px;
+        }
+
+    .badge {
+        font-size: 0.9rem;
+        padding: 6px 12px;
+        margin-right: 5px;
+    }
+
+    .text-muted {
+        font-size: 0.95rem;
+    }
+
+    .btn-custom {
+        background: linear-gradient(90deg, #007bff, #0056b3);
+        border: none;
+        border-radius: 5px;
+        padding: 8px 20px;
+        color: white;
+        transition: all 0.3s ease;
+    }
+
+        .btn-custom:hover {
+            background: linear-gradient(90deg, #0056b3, #003366);
+            transform: translateY(-2px);
+        }
+
+    .card-footer {
+        border-bottom-left-radius: 10px;
+        border-bottom-right-radius: 10px;
+        background: #f8f9fa;
+        padding: 15px;
+        text-align: center;
+    }
+</style>
+
 <div class="container mt-4">
-    <div class="card shadow-sm">
-        <div class="card-header bg-primary text-white">
-            <h2 class="mb-0">@Model.NewsArticle.Title</h2>
+    <div class="card details-card">
+        <div class="card-header">
+            <h2 class="card-title">@Model.NewsArticle.Title</h2>
         </div>
-        <div class="card-body p-4">
-            <p class="text-muted mb-3">Danh mục: @(Model.Categories?.FirstOrDefault(c => c.Value == Model.NewsArticle.CategoryId.ToString())?.Text ?? "Không xác định")</p>
-            <p class="card-text">@Model.NewsArticle.Content</p>
-            <div class="mt-3">
-                <h5 class="text-dark">Các thẻ liên quan:</h5>
+        <div class="card-body">
+            <div class="info-section">
+                <p class="text-muted mb-3">Danh mục: @(Model.Categories?.FirstOrDefault(c => c.Value == Model.NewsArticle.CategoryId.ToString())?.Text ?? "Không xác định")</p>
+                <p class="card-text">@Model.NewsArticle.Content</p>
+            </div>
+            <div class="info-section">
+                <h5>Các thẻ liên quan:</h5>
                 @if (Model.TagNames != null && Model.TagNames.Count > 0)
                 {
                     <ul class="list-inline">
@@ -32,8 +102,7 @@
                     <p class="text-muted">Không có thẻ nào được gắn.</p>
                 }
             </div>
-
-            <div class="mt-3">
+            <div class="info-section">
                 <p class="text-muted mb-1"><strong>Thời gian tạo:</strong> @Model.NewsArticle.CreatedDate.ToString("dd/MM/yyyy HH:mm")</p>
                 <p class="text-muted mb-1"><strong>Người tạo:</strong> @(Model.CreatedByName ?? "Chưa xác định")</p>
                 @if (!string.IsNullOrEmpty(Model.ModifiedByName) && Model.NewsArticle.ModifiedDate.HasValue)
@@ -47,8 +116,8 @@
                 }
             </div>
         </div>
-        <div class="card-footer bg-light p-3">
-            <a asp-page="/News/Index" class="btn btn-secondary">Quay lại</a>
+        <div class="card-footer">
+            <a asp-page="/News/Index" class="btn btn-custom">Quay lại</a>
         </div>
     </div>
 </div>
